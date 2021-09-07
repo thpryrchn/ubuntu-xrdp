@@ -71,6 +71,12 @@ RUN apt -y full-upgrade && apt-get install -y \
   xorgxrdp \
   xprintidle \
   xrdp \
+  nano \
+  wget \
+  htop \
+  jack-tools \
+  meterbridge \
+  pulseaudio-module-jack \
   $ADDITIONAL_PACKAGES && \
   apt remove -y light-locker xscreensaver && \
   apt autoremove -y && \
@@ -81,6 +87,12 @@ COPY --from=builder /tmp/so/module-xrdp-sink.so /var/lib/xrdp-pulseaudio-install
 ADD bin /usr/bin
 ADD etc /etc
 ADD autostart /etc/xdg/autostart
+RUN curl https://repo.skype.com/data/SKYPE-GPG-KEY | sudo apt-key add -
+RUN echo "deb [arch=amd64] https://repo.skype.com/deb stable main" | sudo tee /etc/apt/sources.list.d/skypeforlinux.list
+RUN apt-get update
+RUN apt-get install skypeforlinux -y
+RUN cd /tmp ; wget https://zoom.us/client/latest/zoom_amd64.deb ; apt install -y ./zoom_amd64.deb ; rm zoom_amd64.deb
+
 
 # Configure
 RUN mkdir /var/run/dbus && \
